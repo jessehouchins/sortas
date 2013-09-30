@@ -2,7 +2,7 @@
 
   // converts values to lowercase string values if they are sortable types
   function toSortableString(x) {
-    return (x || x === 0) && x !== 'object' ? x.toString().toLowerCase() : null
+    return (x || x === 0) && typeof x !== 'object' ? x.toString().toLowerCase() : null
   }
 
   window.sortAs = {
