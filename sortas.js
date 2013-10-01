@@ -1,15 +1,21 @@
-(function() { "use strict";
-
-  // converts values to lowercase string values if they are sortable types
-  function toSortableString(x) {
-    return (x || x === 0) && x !== 'object' ? x.toString().toLowerCase() : null
+// Shim for CJS Module
+if (define === undefined) {
+  var define = function(fn) {
+    module.exports = fn()
   }
+}
 
-  window.sortAs = {
+// The AMD Module
+
+define(function() {
+  "use strict"
+
+  var sortAs = {
 
     text: function(a, b) {
       a = toSortableString(a)
       b = toSortableString(b)
+
 
       if (a === b) return 0
 
@@ -28,15 +34,17 @@
           aCode = a.charCodeAt(i)
           bCode = b.charCodeAt(i)
           codesMatch = aCode === bCode
+          aNum = aCode <= 57 && aCode >= 48
+          bNum = bCode <= 57 && bCode >= 48
 
           // if both are numbers, start tracking
-          if (aCode <= 57 && aCode >= 48 && bCode <= 57 && bCode >= 48) {
+          if (aNum && bNum) {
             if (!compareNumbers) startIndex = i
             compareNumbers = true
           }
 
           // if neither are numbers, stop tracking
-          else if (codesMatch) {
+          else if (!aNum && !bNum) {
             startIndex = i
             compareNumbers = false
           }
@@ -66,4 +74,12 @@
 
   }
 
-})()
+  // Private Methods
+
+  function toSortableString(x) {
+    return (x || x === 0) && typeof x !== 'object' ? x.toString().toLowerCase() : null
+  }
+
+  return sortAs
+
+})
